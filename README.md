@@ -61,9 +61,12 @@ tel quel (figures, texte déjà en gras, formules…).
 2. Calcul des lettres à mettre en gras, mot par mot ([text.py](bionic_pdf/text.py)).
 3. Repérage des figures ([figures.py](bionic_pdf/figures.py)).
 4. Effacement du texte concerné, sans toucher aux images ni aux dessins, puis
-   réécriture au même endroit avec **la police d'origine extraite du PDF**. Le gras
-   est obtenu en ajoutant un fin contour de la couleur du texte : la largeur des
-   lettres ne change pas, donc la mise en page reste identique au point près.
+   réécriture au même endroit avec **les polices déjà présentes dans le PDF**
+   ([fonts.py](bionic_pdf/fonts.py)). Aucune police n'est ajoutée : tous les
+   lecteurs (Evince, Okular, Firefox, Acrobat…) affichent le résultat comme
+   l'original. Le gras est obtenu en ajoutant un fin contour de la couleur du
+   texte : la largeur des lettres ne change pas, donc la mise en page reste
+   identique au point près.
 5. **Vérification** : chaque page doit contenir exactement les mêmes caractères,
    aux mêmes positions. Sinon, la page d'origine est remise telle quelle et le
    résumé le signale. Le texte reste sélectionnable et le copier-coller donne le
@@ -73,8 +76,8 @@ tel quel (figures, texte déjà en gras, formules…).
 
 - Les **PDF scannés** (pages en image) ne contiennent pas de texte : rien n'est
   converti. Il faudrait d'abord une reconnaissance de texte (OCR).
-- Les ligatures (ﬁ, ﬀ…) sont réécrites en lettres séparées. La différence est
-  presque invisible.
+- Le texte dont la police ne décrit pas ses caractères (ni table ToUnicode, ni
+  encodage connu) est laissé tel quel : le résumé l'indique.
 - Les figures sont détectées automatiquement. Une étiquette isolée loin de sa
   figure peut quand même être convertie.
 

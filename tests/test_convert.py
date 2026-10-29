@@ -1,6 +1,9 @@
 """Tests de bout en bout sur des PDF générés (français et anglais)."""
 
+import shutil
+import subprocess
 from collections import Counter
+from pathlib import Path
 
 import pymupdf
 import pytest
@@ -139,3 +142,38 @@ def test_damaged_page_is_restored(sample, tmp_path, monkeypatch):
     stats = convert(sample, out)
     assert stats.pages_restored == [0]
     assert _chars(out) == _chars(sample)
+
+
+def _fonts(path):
+    with pymupdf.open(path) as doc:
+        return {(f[3], f[2]) for page in doc for f in page.get_fonts()}
+
+
+def test_no_font_is_added(sample, tmp_path):
+    """Le texte est réécrit avec les polices déjà présentes, sans en ajouter."""
+    out = tmp_path / "out.pdf"
+    convert(sample, out)
+    assert _fonts(out) == _fonts(sample)
+
+
+ARTICLE = Path(__file__).parent.parent / "test_article.pdf"
+
+
+@pytest.mark.skipif(shutil.which("pdftoppm") is None, reason="poppler absent")
+@pytest.mark.parametrize("source", ["generated", "article"])
+def test_poppler_renders_without_warning(source, tmp_path):
+    """Evince et Okular (poppler) doivent afficher le résultat sans erreur.
+    L'article (LaTeX) utilise des polices Type 1, les PDF générés non."""
+    if source == "article":
+        if not ARTICLE.exists():
+            pytest.skip("test_article.pdf absent")
+        pdf, pages = ARTICLE, {0}
+    else:
+        pdf, pages = _make_pdf(tmp_path / "in.pdf", embed_font=True), None
+    out = tmp_path / "out.pdf"
+    stats = convert(pdf, out, pages=pages)
+    assert stats.words > 0 and not stats.pages_restored
+    result = subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "20", "-png",
+                             str(out), str(tmp_path / "p")],
+                            capture_output=True, text=True, check=True)
+    assert result.stderr == ""
