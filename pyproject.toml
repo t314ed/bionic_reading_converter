@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bionic-pdf"
+version = "0.1.0"
+description = "Convertit le texte d'un PDF au format bionic reading, sans toucher aux figures."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["pymupdf>=1.24"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+bionic-pdf = "bionic_pdf.cli:main"
+
+[tool.setuptools]
+packages = ["bionic_pdf"]
