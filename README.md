@@ -42,6 +42,18 @@ changements sont pris en compte sans réinstaller.
    Le résultat est créé à côté de l'original, sous le nom
    `mon_article_bionic.pdf`. L'original n'est jamais modifié.
 
+### Dossiers `source/` et `converti/`
+
+Le dépôt contient deux dossiers de travail. Leur contenu n'est jamais envoyé
+sur GitHub (voir `.gitignore`) :
+
+- `source/` : les PDF à convertir ;
+- `converti/` : les PDF convertis.
+
+```bash
+bionic-pdf source/mon_article.pdf -o converti/mon_article.pdf
+```
+
 ### Options
 
 ```bash

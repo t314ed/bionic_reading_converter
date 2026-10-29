@@ -5,3 +5,9 @@ build/
 dist/
 .pytest_cache/
 *_bionic.pdf
+
+# PDF à convertir et PDF convertis : restent en local (seul le dossier est versionné)
+source/*
+!source/.gitkeep
+converti/*
+!converti/.gitkeep
