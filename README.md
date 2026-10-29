@@ -12,26 +12,62 @@ automatiquement, sans option à choisir.
 
 ## Installation
 
+Il faut Python 3.9 ou plus récent. Dans un environnement virtuel Python :
+
 ```bash
-pip install -e .
+git clone https://github.com/t314ed/bionic_reading_converter.git
+cd bionic_reading_converter
+pip install .
 ```
 
-Dépendance unique : [PyMuPDF](https://pymupdf.readthedocs.io).
+Dépendance unique : [PyMuPDF](https://pymupdf.readthedocs.io), installée
+automatiquement. Pour modifier le code, utilise plutôt `pip install -e .` : les
+changements sont pris en compte sans réinstaller.
 
 ## Utilisation
 
+1. Active l'environnement Python où le convertisseur est installé. C'est à
+   refaire dans chaque nouveau terminal :
+
+   ```bash
+   source /chemin/vers/ton/env/bin/activate
+   ```
+
+2. Lance la conversion :
+
+   ```bash
+   bionic-pdf ~/Documents/mon_article.pdf
+   ```
+
+   Le résultat est créé à côté de l'original, sous le nom
+   `mon_article_bionic.pdf`. L'original n'est jamais modifié.
+
+### Options
+
 ```bash
-bionic-pdf article.pdf                    # crée article_bionic.pdf
 bionic-pdf article.pdf -o lecture.pdf     # choisit le nom du fichier produit
 bionic-pdf article.pdf --pages 1-3,5      # convertit seulement certaines pages
-bionic-pdf article.pdf --ratio 0.4        # met moins de lettres en gras
-bionic-pdf article.pdf --weight 0.06      # gras plus épais
+bionic-pdf article.pdf --ratio 0.4        # met moins de lettres en gras (défaut : 0.5)
+bionic-pdf article.pdf --weight 0.06      # gras plus épais (défaut : 0.04)
+bionic-pdf article.pdf -q                 # n'affiche pas le résumé
+bionic-pdf --help                         # aide complète
 ```
 
-`python -m bionic_pdf ...` marche aussi sans installation.
+Depuis le dossier du dépôt, `python -m bionic_pdf ...` marche aussi sans
+installation (PyMuPDF doit quand même être installé).
 
-À la fin, un résumé indique le nombre de mots convertis et ce qui a été laissé
-tel quel (figures, texte déjà en gras, formules…).
+### Le résumé
+
+À la fin, la commande affiche :
+
+- le nombre de pages traitées et de mots convertis ;
+- ce qui a été laissé tel quel : figures, texte déjà en gras, formules,
+  texte non horizontal ;
+- les pages éventuellement remises d'origine par sécurité, si la vérification
+  a détecté un écart.
+
+Si le résumé indique « aucun texte converti », le PDF est probablement scanné :
+ses pages sont des images, sans texte à convertir.
 
 ## Règles de mise en gras
 
